@@ -2,6 +2,7 @@ import org.frice.Game;
 import org.frice.obj.sub.ImageObject;
 import org.frice.resource.image.FileImageResource;
 import org.frice.resource.image.ImageResource;
+import org.frice.util.FileUtils;
 import org.frice.util.media.AudioManager;
 import org.frice.util.media.AudioPlayer;
 
@@ -11,6 +12,7 @@ import static org.frice.Initializer.launch;
 
 public class Klotski extends Game {
 	private ImageObject[][] matrix;
+	private int[][] figure;
 	private int x;
 	private int y;
 
@@ -48,6 +50,7 @@ public class Klotski extends Game {
 						new ImageObject(new FileImageResource("./res/img/15.jpg"), 400, 600),
 						new ImageObject(new FileImageResource("./res/img/0.jpg"), 600, 600)}
 		};
+		figure = new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 		for (int i = 0; i < 1000; i++) {
 			int a = (int) (Math.random() * 4);
 			switch (a) {
@@ -88,9 +91,32 @@ public class Klotski extends Game {
 	}
 
 	@Override
+	public void onExit() {
+		System.exit(0);
+	}
+
+	@Override
 	public void onRefresh() {
-		//if (x == 3 && y == 3)
-		//dialogShow("adadad");
+		if (win()) {
+			new Thread(() -> FileUtils.image2File(getScreenCut().getImage(), "screenshot.png")).start();
+			//SimpleText gameOver = new SimpleText(ColorResource.RED, "CONGRATULATIONS!", 100, 200);
+			//gameOver.setTextSize(100);
+			//addObject(2, gameOver);
+			dialogShow("Excellent Job!", "Congratulations");
+			onExit();
+		}
+	}
+
+	public boolean win() {
+		if (figure[3][3] != 16)
+			return false;
+		for (int i = 0; i < figure.length; i++) {
+			for (int j = 0; j < figure[i].length; j++) {
+				if (figure[i][j] != i * 4 + j + 1)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	public void add() {
@@ -104,6 +130,9 @@ public class Klotski extends Game {
 			ImageResource image = matrix[x - 1][y].getResource();
 			matrix[x][y].setRes(image);
 			matrix[x - 1][y].setRes(new FileImageResource("./res/img/0.jpg"));
+			int temp = figure[x][y];
+			figure[x][y] = figure[x - 1][y];
+			figure[x - 1][y] = temp;
 			x--;
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
@@ -120,6 +149,9 @@ public class Klotski extends Game {
 			ImageResource image = matrix[x][y - 1].getResource();
 			matrix[x][y].setRes(image);
 			matrix[x][y - 1].setRes(new FileImageResource("./res/img/0.jpg"));
+			int temp = figure[x][y];
+			figure[x][y] = figure[x][y - 1];
+			figure[x][y - 1] = temp;
 			y--;
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
@@ -136,6 +168,9 @@ public class Klotski extends Game {
 			ImageResource image = matrix[x][y + 1].getResource();
 			matrix[x][y].setRes(image);
 			matrix[x][y + 1].setRes(new FileImageResource("./res/img/0.jpg"));
+			int temp = figure[x][y];
+			figure[x][y] = figure[x][y + 1];
+			figure[x][y + 1] = temp;
 			y++;
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
@@ -152,6 +187,9 @@ public class Klotski extends Game {
 			ImageResource image = matrix[x + 1][y].getResource();
 			matrix[x][y].setRes(image);
 			matrix[x + 1][y].setRes(new FileImageResource("./res/img/0.jpg"));
+			int temp = figure[x][y];
+			figure[x][y] = figure[x + 1][y];
+			figure[x + 1][y] = temp;
 			x++;
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
