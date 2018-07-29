@@ -1,4 +1,5 @@
 import org.frice.Game;
+import org.frice.obj.button.SimpleText;
 import org.frice.obj.sub.ImageObject;
 import org.frice.resource.image.FileImageResource;
 import org.frice.resource.image.ImageResource;
@@ -7,6 +8,8 @@ import org.frice.util.media.AudioManager;
 import org.frice.util.media.AudioPlayer;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.frice.Initializer.launch;
 
@@ -15,6 +18,9 @@ public class Klotski extends Game {
 	private int[][] figure;
 	private int x;
 	private int y;
+	private int step = 0;
+	private SimpleText text;
+	private String userName;
 
 	public static void main(String[] args) {
 		launch(Klotski.class);
@@ -22,8 +28,8 @@ public class Klotski extends Game {
 
 	@Override
 	public void onInit() {
-		setShowFPS(true);
-		setSize(800, 850);
+		setShowFPS(false);
+		setSize(1100, 850);
 		//setLocation(100, 100);
 		setLoseFocusChangeColor(false);
 		setTitle("FIGURE KLOTSKI");
@@ -50,6 +56,8 @@ public class Klotski extends Game {
 						new ImageObject(new FileImageResource("./res/img/15.jpg"), 400, 600),
 						new ImageObject(new FileImageResource("./res/img/0.jpg"), 600, 600)}
 		};
+		text = new SimpleText("step: " + step, 850, 100);
+		addObject(text);
 		figure = new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 		for (int i = 0; i < 1000; i++) {
 			int a = (int) (Math.random() * 4);
@@ -69,6 +77,12 @@ public class Klotski extends Game {
 			}
 		}
 		add();
+		ArrayList<String> list = Rank.topTen();
+		for (int i = 0; i < list.size(); i++) {
+			addObject(new SimpleText(list.get(i), 825, 200 + i * 50));
+		}
+		addObject(new SimpleText("Top 10 players:", 825, 150));
+		userName = dialogInput("Your name here:", "User Name");
 		addKeyListener(null, keyEvent ->
 		{
 			switch (keyEvent.getKeyCode()) {
@@ -102,7 +116,12 @@ public class Klotski extends Game {
 			//SimpleText gameOver = new SimpleText(ColorResource.RED, "CONGRATULATIONS!", 100, 200);
 			//gameOver.setTextSize(100);
 			//addObject(2, gameOver);
-			dialogShow("Excellent Job!", "Congratulations");
+			dialogShow("Excellent Job!\nYour score: " + step, "Congratulations");
+			try {
+				new Rank(userName, step);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			onExit();
 		}
 	}
@@ -137,6 +156,9 @@ public class Klotski extends Game {
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
 				audioPlayer.start();
+				step++;
+				text.setText("step: " + step);
+				addObject(text);
 			}
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
@@ -160,6 +182,9 @@ public class Klotski extends Game {
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
 			audioPlayer.start();
+			step++;
+			text.setText("step: " + step);
+			addObject(text);
 		}
 	}
 
@@ -175,6 +200,9 @@ public class Klotski extends Game {
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
 				audioPlayer.start();
+				step++;
+				text.setText("step: " + step);
+				addObject(text);
 			}
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
@@ -194,6 +222,9 @@ public class Klotski extends Game {
 			if (audioOn) {
 				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
 				audioPlayer.start();
+				step++;
+				text.setText("step: " + step);
+				addObject(text);
 			}
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
