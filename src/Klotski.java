@@ -112,7 +112,7 @@ public class Klotski extends Game {
 	@Override
 	public void onRefresh() {
 		if (win()) {
-			new Thread(() -> FileUtils.image2File(getScreenCut().getImage(), "screenshot.png")).start();
+			//new Thread(() -> FileUtils.image2File(getScreenCut().getImage(), "screenshot.png")).start();
 			//SimpleText gameOver = new SimpleText(ColorResource.RED, "CONGRATULATIONS!", 100, 200);
 			//gameOver.setTextSize(100);
 			//addObject(2, gameOver);
