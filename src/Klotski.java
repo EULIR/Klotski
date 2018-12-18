@@ -3,7 +3,6 @@ import org.frice.obj.button.SimpleText;
 import org.frice.obj.sub.ImageObject;
 import org.frice.resource.image.FileImageResource;
 import org.frice.resource.image.ImageResource;
-import org.frice.util.FileUtils;
 import org.frice.util.media.AudioManager;
 import org.frice.util.media.AudioPlayer;
 
@@ -153,13 +152,7 @@ public class Klotski extends Game {
 			figure[x][y] = figure[x - 1][y];
 			figure[x - 1][y] = temp;
 			x--;
-			if (audioOn) {
-				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
-				audioPlayer.start();
-				step++;
-				text.setText("step: " + step);
-				addObject(text);
-			}
+			audio(audioOn);
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
 			audioPlayer.start();
@@ -197,16 +190,20 @@ public class Klotski extends Game {
 			figure[x][y] = figure[x][y + 1];
 			figure[x][y + 1] = temp;
 			y++;
-			if (audioOn) {
-				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
-				audioPlayer.start();
-				step++;
-				text.setText("step: " + step);
-				addObject(text);
-			}
+			audio(audioOn);
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
 			audioPlayer.start();
+		}
+	}
+
+	private void audio(boolean audioOn) {
+		if (audioOn) {
+			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
+			audioPlayer.start();
+			step++;
+			text.setText("step: " + step);
+			addObject(text);
 		}
 	}
 
@@ -219,13 +216,7 @@ public class Klotski extends Game {
 			figure[x][y] = figure[x + 1][y];
 			figure[x + 1][y] = temp;
 			x++;
-			if (audioOn) {
-				AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/SpeechOn.wav");
-				audioPlayer.start();
-				step++;
-				text.setText("step: " + step);
-				addObject(text);
-			}
+			audio(audioOn);
 		} else if (audioOn) {
 			AudioPlayer audioPlayer = AudioManager.getPlayer("./res/mus/WindowsBackground.wav");
 			audioPlayer.start();
